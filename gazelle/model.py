@@ -532,6 +532,9 @@ def get_gazelle_model(model_name):
         "gazelle_ms_dinov2_vitl14_inout":     gazelle_ms_dinov2_vitl14_inout,
         "gazelle_mst_dinov2_vitb14_inout":    gazelle_mst_dinov2_vitb14_inout,
         "gazelle_mst_dinov2_vitl14_inout":    gazelle_mst_dinov2_vitl14_inout,
+        # Public aliases matching the released checkpoint naming
+        "GazeFollow_glh_vitl14":              gazelle_ms_dinov2_vitl14,
+        "VAT_glh_vitl14":                     gazelle_mst_dinov2_vitl14_inout,
     }
     assert model_name in factory.keys(), f"Invalid model: {model_name}. Options: {list(factory.keys())}"
     return factory[model_name]()

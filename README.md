@@ -30,12 +30,12 @@ Optional: install [xformers](https://github.com/facebookresearch/xformers) to sp
 
 We provide the ViT-L checkpoints used in the main experiments. The DINOv2 backbone weights are downloaded automatically from `facebookresearch/dinov2` via PyTorch Hub on first run.
 
-| Model factory | Stage | Training data | Checkpoint |
-| --- | --- | --- | --- |
-| `gazelle_ms_dinov2_vitl14` | Static (MLAF + DAH) | GazeFollow | `saved_weights/vitl/gazefollow/epoch_14.pt` |
-| `gazelle_mst_dinov2_vitl14_inout` | Temporal (MLAF + GTA + DAH, in/out head) | VideoAttentionTarget | `saved_weights/vitl/vat/epoch_7.pt` |
+| Model factory | Training data | Checkpoint |
+| --- | --- | --- |
+| `GazeFollow_glh_vitl14` | GazeFollow | `saved_weights/vitl/gazefollow/weight.pt` |
+| `VAT_glh_vitl14` | VideoAttentionTarget | `saved_weights/vitl/vat/weight.pt` |
 
-The released VAT checkpoint corresponds to the temporal model (`gazelle_mst_..._inout`); it is the one used for the headline VAT numbers in the paper.
+The released VAT checkpoint is the temporal model (MLAF + GTA + DAH with the in/out-of-frame head); it is the one used for the headline VAT numbers in the paper.
 
 ## Inference example
 
@@ -44,9 +44,9 @@ from PIL import Image
 import torch
 from gazelle.model import get_gazelle_model
 
-model, transform = get_gazelle_model("gazelle_ms_dinov2_vitl14")
+model, transform = get_gazelle_model("GazeFollow_glh_vitl14")
 model.load_gazelle_state_dict(
-    torch.load("saved_weights/vitl/gazefollow/epoch_14.pt", weights_only=True)
+    torch.load("saved_weights/vitl/gazefollow/weight.pt", weights_only=True)
 )
 model.eval()
 
@@ -70,9 +70,9 @@ heatmap = output["heatmap"][0][0]   # [64, 64]
 For in/out-of-frame prediction, use the temporal VAT checkpoint with a clip of `T` frames:
 
 ```python
-model, transform = get_gazelle_model("gazelle_mst_dinov2_vitl14_inout")
+model, transform = get_gazelle_model("VAT_glh_vitl14")
 model.load_gazelle_state_dict(
-    torch.load("saved_weights/vitl/vat/epoch_7.pt", weights_only=True)
+    torch.load("saved_weights/vitl/vat/weight.pt", weights_only=True)
 )
 model.eval().to(device)
 
